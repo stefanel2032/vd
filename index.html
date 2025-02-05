@@ -39,11 +39,17 @@
 
     <script>
         let yesButton = document.getElementById("yes");
+
         function increaseYes() {
             let currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
             yesButton.style.fontSize = (currentSize + 10) + "px";
         }
+
         function showRing() {
+            // Deschide videoclipul YouTube într-o nouă filă
+            window.open("https://www.youtube.com/watch?v=qdDVtFvJwUc", "_blank");
+
+            // Schimbă conținutul paginii pentru a afișa inelul
             document.body.innerHTML = '<h1>Yay! 💍</h1><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Diamond_Ring.png" width="300">';
         }
     </script>
