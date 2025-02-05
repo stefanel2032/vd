@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day?</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 100px;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #yes {
+            background-color: green;
+            color: white;
+        }
+        #no {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vrei să ieși cu mine de Valentine's Day? ❤️</h1>
+    <div class="buttons">
+        <button id="yes" class="button" onclick="showRing()">Da</button>
+        <button id="no" class="button" onclick="increaseYes()">Nu</button>
+    </div>
+    <div id="response" style="margin-top:20px;"></div>
+
+    <script>
+        let yesButton = document.getElementById("yes");
+        function increaseYes() {
+            let currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
+            yesButton.style.fontSize = (currentSize + 10) + "px";
+        }
+        function showRing() {
+            document.body.innerHTML = '<h1>Yay! 💍</h1><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Diamond_Ring.png" width="300">';
+        }
+    </script>
+</body>
+</html>
