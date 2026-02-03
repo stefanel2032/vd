@@ -15,7 +15,7 @@
     font-family: Arial, sans-serif;
     background:
       linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-      url("eu.jpg") center/cover no-repeat;
+      url("poza.jpg") center/cover no-repeat;
     color: white;
     overflow: hidden;
   }
@@ -26,7 +26,7 @@
     inset: 0;
     background:
       linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-      url("eu.jpg") center/cover no-repeat;
+      url("poza.jpg") center/cover no-repeat;
     filter: blur(8px);
     z-index: -1;
   }
@@ -56,7 +56,7 @@
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: transform 0.3s, font-size 0.3s;
   }
 
   #yes {
@@ -67,11 +67,17 @@
   #no {
     background: #e63946;
     color: white;
-    position: absolute;
   }
 
   button:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
+  }
+
+  canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
   }
 
   img {
@@ -83,13 +89,6 @@
     from { transform: scale(0); }
     to { transform: scale(1); }
   }
-
-  canvas {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-  }
 </style>
 </head>
 
@@ -98,27 +97,27 @@
 <canvas id="confetti"></canvas>
 
 <div class="container" id="card">
-  <h1>Vrei să ieși cu mine de Valentine's Day? ❤️</h1>
-  <p>Promit o seară frumoasă și un zâmbet sincer 😊</p>
+  <h1>Domnișoara Dr. med. Tănase, îmi acordați mie ziua de 14? ❤️</h1>
+  <p> Am vorbit cu vremea să fie romantică doar pentru noi 😊</p>
 
   <div class="buttons">
     <button id="yes" onclick="showRing()">Da 💖</button>
-    <button id="no" onmouseover="moveNo()">Nu 🙈</button>
+    <button id="no" onclick="growYes()">Nu 🙈</button>
   </div>
 
   <p style="margin-top:15px;font-size:14px;opacity:0.85;">
-    PS: poza din fundal sunt eu 😌
+    PS:  😌
   </p>
 </div>
 
 <script>
-  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
 
-  function moveNo() {
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 60);
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+  function growYes() {
+    const currentSize = parseFloat(
+      window.getComputedStyle(yesBtn).fontSize
+    );
+    yesBtn.style.fontSize = (currentSize + 8) + "px";
   }
 
   /* 🎉 CONFETTI */
@@ -134,7 +133,7 @@
   window.addEventListener("resize", resizeCanvas);
 
   function startConfetti() {
-    confettiPieces = Array.from({ length: 150 }, () => ({
+    confettiPieces = Array.from({ length: 160 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height - canvas.height,
       r: Math.random() * 6 + 4,
@@ -142,7 +141,7 @@
       color: hsl(${Math.random() * 360}, 100%, 60%)
     }));
 
-    let duration = 0;
+    let frames = 0;
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       confettiPieces.forEach(p => {
@@ -152,8 +151,8 @@
         ctx.fill();
         p.y += p.d * 8;
       });
-      duration++;
-      if (duration < 180) requestAnimationFrame(draw);
+      frames++;
+      if (frames < 180) requestAnimationFrame(draw);
       else ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     draw();
