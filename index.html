@@ -15,7 +15,7 @@
     font-family: Arial, sans-serif;
     background:
       linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-      url("poza.jpg") center/cover no-repeat;
+      url("poza.jpeg") center/cover no-repeat;
     color: white;
     overflow: hidden;
   }
@@ -26,7 +26,7 @@
     inset: 0;
     background:
       linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-      url("poza.jpg") center/cover no-repeat;
+      url("poza.jpeg") center/cover no-repeat;
     filter: blur(8px);
     z-index: -1;
   }
@@ -101,29 +101,32 @@
   <p> Am vorbit cu vremea să fie romantică doar pentru noi 😊</p>
 
   <div class="buttons">
-    <button id="yes" onclick="showRing()">Da 💖</button>
-    <button id="no" onclick="growYes()">Nu 🙈</button>
+    <button id="yes">Da 💖</button>
+    <button id="no">Nu 🙈</button>
   </div>
 
   <p style="margin-top:15px;font-size:14px;opacity:0.85;">
-    PS:  😌
+    PS: imaginea e cu AI, dar intențiile mele sunt reale 😌
   </p>
 </div>
 
 <script>
-  const yesBtn = document.getElementById("yes");
+document.addEventListener("DOMContentLoaded", () => {
 
-  function growYes() {
-    const currentSize = parseFloat(
+  const yesBtn = document.getElementById("yes");
+  const noBtn  = document.getElementById("no");
+
+  /* 👉 NU → mărește DA */
+  noBtn.addEventListener("click", () => {
+    const size = parseFloat(
       window.getComputedStyle(yesBtn).fontSize
     );
-    yesBtn.style.fontSize = (currentSize + 8) + "px";
-  }
+    yesBtn.style.fontSize = (size + 8) + "px";
+  });
 
   /* 🎉 CONFETTI */
   const canvas = document.getElementById("confetti");
   const ctx = canvas.getContext("2d");
-  let confettiPieces = [];
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -133,32 +136,32 @@
   window.addEventListener("resize", resizeCanvas);
 
   function startConfetti() {
-    confettiPieces = Array.from({ length: 160 }, () => ({
+    const pieces = Array.from({ length: 160 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height - canvas.height,
       r: Math.random() * 6 + 4,
       d: Math.random() * 0.5 + 0.5,
-      color: hsl(${Math.random() * 360}, 100%, 60%)
+      c: hsl(${Math.random() * 360},100%,60%)
     }));
 
     let frames = 0;
     function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      confettiPieces.forEach(p => {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pieces.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle = p.c;
         ctx.fill();
         p.y += p.d * 8;
       });
       frames++;
       if (frames < 180) requestAnimationFrame(draw);
-      else ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     draw();
   }
 
-  function showRing() {
+  /* 💍 DA */
+  yesBtn.addEventListener("click", () => {
     startConfetti();
 
     setTimeout(() => {
@@ -167,7 +170,6 @@
           <h1>Știam eu 💍❤️</h1>
           <p>14 februarie e doar începutul.</p>
           <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Diamond_Ring.png" width="280">
-          <p style="margin-top:20px;">Apasă OK și pornește magia 🎶</p>
         </div>
       `;
 
@@ -176,7 +178,9 @@
         "_blank"
       );
     }, 1200);
-  }
+  });
+
+});
 </script>
 
 </body>
