@@ -1,57 +1,184 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine's Day?</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            margin-top: 100px;
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        .button {
-            font-size: 20px;
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
-        }
-        #yes {
-            background-color: green;
-            color: white;
-        }
-        #no {
-            background-color: red;
-            color: white;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine’s Day ❤️</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background:
+      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+      url("eu.jpg") center/cover no-repeat;
+    color: white;
+    overflow: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+      url("eu.jpg") center/cover no-repeat;
+    filter: blur(8px);
+    z-index: -1;
+  }
+
+  .container {
+    background: rgba(0,0,0,0.45);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    max-width: 90%;
+    z-index: 2;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  .buttons {
+    margin-top: 30px;
+  }
+
+  button {
+    font-size: 20px;
+    padding: 12px 28px;
+    margin: 10px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  #yes {
+    background: #4CAF50;
+    color: white;
+  }
+
+  #no {
+    background: #e63946;
+    color: white;
+    position: absolute;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+  }
+
+  img {
+    margin-top: 20px;
+    animation: pop 0.8s ease;
+  }
+
+  @keyframes pop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+
+  canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
 </head>
+
 <body>
-    <h1>Vrei să ieși cu mine de Valentine's Day? ❤️</h1>
-    <div class="buttons">
-        <button id="yes" class="button" onclick="showRing()">Da</button>
-        <button id="no" class="button" onclick="increaseYes()">Nu</button>
-    </div>
-    <div id="response" style="margin-top:20px;"></div>
 
-    <script>
-        let yesButton = document.getElementById("yes");
+<canvas id="confetti"></canvas>
 
-        function increaseYes() {
-            let currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
-            yesButton.style.fontSize = (currentSize + 10) + "px";
-        }
+<div class="container" id="card">
+  <h1>Vrei să ieși cu mine de Valentine's Day? ❤️</h1>
+  <p>Promit o seară frumoasă și un zâmbet sincer 😊</p>
 
-        function showRing() {
-            // Deschide videoclipul YouTube într-o nouă filă
-            window.open("https://www.youtube.com/watch?v=qdDVtFvJwUc", "_blank");
+  <div class="buttons">
+    <button id="yes" onclick="showRing()">Da 💖</button>
+    <button id="no" onmouseover="moveNo()">Nu 🙈</button>
+  </div>
 
-            // Schimbă conținutul paginii pentru a afișa inelul
-            document.body.innerHTML = '<h1>Yay! 💍</h1><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Diamond_Ring.png" width="300">';
-        }
-    </script>
+  <p style="margin-top:15px;font-size:14px;opacity:0.85;">
+    PS: poza din fundal sunt eu 😌
+  </p>
+</div>
+
+<script>
+  const noBtn = document.getElementById("no");
+
+  function moveNo() {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
+
+  /* 🎉 CONFETTI */
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  let confettiPieces = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  function startConfetti() {
+    confettiPieces = Array.from({ length: 150 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 0.5 + 0.5,
+      color: hsl(${Math.random() * 360}, 100%, 60%)
+    }));
+
+    let duration = 0;
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confettiPieces.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        p.y += p.d * 8;
+      });
+      duration++;
+      if (duration < 180) requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    draw();
+  }
+
+  function showRing() {
+    startConfetti();
+
+    setTimeout(() => {
+      document.body.innerHTML = `
+        <div class="container">
+          <h1>Știam eu 💍❤️</h1>
+          <p>14 februarie e doar începutul.</p>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Diamond_Ring.png" width="280">
+          <p style="margin-top:20px;">Apasă OK și pornește magia 🎶</p>
+        </div>
+      `;
+
+      window.open(
+        "https://www.youtube.com/watch?v=OK3HTPs1ccI",
+        "_blank"
+      );
+    }, 1200);
+  }
+</script>
+
 </body>
 </html>
