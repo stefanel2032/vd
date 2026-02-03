@@ -1,169 +1,112 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine’s Day ❤️</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valentine’s Day ❤️</title>
 
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background:
-      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-      url("poza.jpeg") center/cover no-repeat;
-    color: white;
-    overflow: hidden;
-  }
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background:
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url("poza.jpeg") center/cover no-repeat;
+      color: white;
+      overflow: hidden;
+      text-align: center;
+    }
 
-  body::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-      url("poza.jpeg") center/cover no-repeat;
-    filter: blur(8px);
-    z-index: -1;
-  }
+    .container {
+      background: rgba(0,0,0,0.45);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      max-width: 92%;
+    }
 
-  .container {
-    background: rgba(0,0,0,0.45);
-    padding: 40px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    max-width: 90%;
-    z-index: 2;
-  }
+    h1 { margin-top: 0; font-size: 1.9em; }
 
-  h1 { font-size: 2em; }
+    .buttons { margin-top: 25px; }
 
-  .buttons { margin-top: 30px; }
+    button {
+      font-size: 20px;
+      padding: 12px 28px;
+      margin: 10px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.2s, font-size 0.2s;
+    }
 
-  button {
-    font-size: 20px;
-    padding: 12px 28px;
-    margin: 10px;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: transform 0.3s, font-size 0.3s;
-  }
+    #yes { background: #4CAF50; color: white; }
+    #no  { background: #e63946; color: white; }
 
-  #yes { background: #4CAF50; color: white; }
-  #no  { background: #e63946; color: white; }
+    button:hover { transform: scale(1.05); }
 
-  button:hover { transform: scale(1.05); }
-
-  canvas {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  img {
-    margin-top: 20px;
-    animation: pop 0.8s ease;
-  }
-
-  @keyframes pop {
-    from { transform: scale(0); }
-    to { transform: scale(1); }
-  }
-</style>
+    #response {
+      margin-top: 18px;
+      font-size: 16px;
+      opacity: 0.95;
+      min-height: 24px;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
+    <h1>Domnișoara Dr. med. Tănase, îmi acordați mie ziua de 14? ❤️</h1>
+    <p>Am vorbit cu vremea să fie romantică doar pentru noi 😊</p>
 
-<canvas id="confetti"></canvas>
+    <div class="buttons">
+      <button id="yes" onclick="yesClicked()">Da 💖</button>
+      <button id="no" onclick="noClicked()">Nu 🙈</button>
+    </div>
 
-<div class="container" id="card">
-  <h1>Domnișoara Dr. med. Tănase, îmi acordați mie ziua de 14? ❤️</h1>
-  <p>Am vorbit cu vremea să fie romantică doar pentru noi 😊</p>
+    <div id="response"></div>
 
-  <div class="buttons">
-    <button id="yes">Da 💖</button>
-    <button id="no">Nu 🙈</button>
+    <p style="margin-top:15px;font-size:14px;opacity:0.85;">
+      PS: imaginea e cu AI, dar intențiile mele sunt reale 😌
+    </p>
   </div>
 
-  <p style="margin-top:15px;font-size:14px;opacity:0.85;">
-    PS: imaginea e cu AI, dar intențiile mele sunt reale 😌
-  </p>
-</div>
+  <script>
+    function noClicked() {
+      const yesBtn = document.getElementById("yes");
+      const response = document.getElementById("response");
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const yesBtn = document.getElementById("yes");
-  const noBtn  = document.getElementById("no");
+      const size = parseFloat(getComputedStyle(yesBtn).fontSize);
+      yesBtn.style.fontSize = (size + 8) + "px";
 
-  // 👉 NU → mărește DA
-  noBtn.addEventListener("click", () => {
-    const size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-    yesBtn.style.fontSize = (size + 8) + "px";
-  });
-
-  // 🎉 CONFETTI
-  const canvas = document.getElementById("confetti");
-  const ctx = canvas.getContext("2d");
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-
-  function startConfetti() {
-    const pieces = Array.from({ length: 160 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      r: Math.random() * 6 + 4,
-      d: Math.random() * 0.5 + 0.5,
-      // ✅ FIX: trebuie să fie string cu backticks
-      c: hsl(${Math.random() * 360}, 100%, 60%)
-    }));
-
-    let frames = 0;
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pieces.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.c;
-        ctx.fill();
-        p.y += p.d * 8;
-      });
-      frames++;
-      if (frames < 180) requestAnimationFrame(draw);
-      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      response.textContent = "Hmm… sigur? 😏 (Da devine din ce în ce mai greu de ignorat)";
     }
-    draw();
-  }
 
-  // 💍 DA
-  yesBtn.addEventListener("click", () => {
-    startConfetti();
-
-    setTimeout(() => {
+    function yesClicked() {
+      // Schimbăm doar conținutul BODY ca să vezi instant că funcționează
       document.body.innerHTML = `
-        <div class="container">
-          <h1>Știam eu 💍❤️</h1>
-          <p>14 februarie e doar începutul.</p>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Diamond_Ring.png" width="280">
+        <div style="
+          background: rgba(0,0,0,0.45);
+          padding: 40px;
+          border-radius: 20px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+          max-width: 92%;
+          text-align:center;
+          color:white;
+          font-family: Arial, sans-serif;
+        ">
+          <h1>Știam eu ❤️</h1>
+          <p>Perfect. 14 februarie e stabilit 😌</p>
+          <p style="opacity:0.9;">(Dacă vrei, pot să pun aici ora și locația.)</p>
         </div>
       `;
 
+      // Dacă vrei totuși muzică, las asta activ:
       window.open("https://www.youtube.com/watch?v=OK3HTPs1ccI", "_blank");
-    }, 1200);
-  });
-});
-</script>
-
+    }
+  </script>
 </body>
 </html>
