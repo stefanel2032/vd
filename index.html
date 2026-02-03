@@ -41,13 +41,9 @@
     z-index: 2;
   }
 
-  h1 {
-    font-size: 2em;
-  }
+  h1 { font-size: 2em; }
 
-  .buttons {
-    margin-top: 30px;
-  }
+  .buttons { margin-top: 30px; }
 
   button {
     font-size: 20px;
@@ -59,19 +55,10 @@
     transition: transform 0.3s, font-size 0.3s;
   }
 
-  #yes {
-    background: #4CAF50;
-    color: white;
-  }
+  #yes { background: #4CAF50; color: white; }
+  #no  { background: #e63946; color: white; }
 
-  #no {
-    background: #e63946;
-    color: white;
-  }
-
-  button:hover {
-    transform: scale(1.05);
-  }
+  button:hover { transform: scale(1.05); }
 
   canvas {
     position: fixed;
@@ -98,7 +85,7 @@
 
 <div class="container" id="card">
   <h1>Domnișoara Dr. med. Tănase, îmi acordați mie ziua de 14? ❤️</h1>
-  <p> Am vorbit cu vremea să fie romantică doar pentru noi 😊</p>
+  <p>Am vorbit cu vremea să fie romantică doar pentru noi 😊</p>
 
   <div class="buttons">
     <button id="yes">Da 💖</button>
@@ -112,19 +99,16 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
   const yesBtn = document.getElementById("yes");
   const noBtn  = document.getElementById("no");
 
-  /* 👉 NU → mărește DA */
+  // 👉 NU → mărește DA
   noBtn.addEventListener("click", () => {
-    const size = parseFloat(
-      window.getComputedStyle(yesBtn).fontSize
-    );
+    const size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
     yesBtn.style.fontSize = (size + 8) + "px";
   });
 
-  /* 🎉 CONFETTI */
+  // 🎉 CONFETTI
   const canvas = document.getElementById("confetti");
   const ctx = canvas.getContext("2d");
 
@@ -141,26 +125,28 @@ document.addEventListener("DOMContentLoaded", () => {
       y: Math.random() * canvas.height - canvas.height,
       r: Math.random() * 6 + 4,
       d: Math.random() * 0.5 + 0.5,
-      c: hsl(${Math.random() * 360},100%,60%)
+      // ✅ FIX: trebuie să fie string cu backticks
+      c: hsl(${Math.random() * 360}, 100%, 60%)
     }));
 
     let frames = 0;
     function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       pieces.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = p.c;
         ctx.fill();
         p.y += p.d * 8;
       });
       frames++;
       if (frames < 180) requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     draw();
   }
 
-  /* 💍 DA */
+  // 💍 DA
   yesBtn.addEventListener("click", () => {
     startConfetti();
 
@@ -173,13 +159,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
 
-      window.open(
-        "https://www.youtube.com/watch?v=OK3HTPs1ccI",
-        "_blank"
-      );
+      window.open("https://www.youtube.com/watch?v=OK3HTPs1ccI", "_blank");
     }, 1200);
   });
-
 });
 </script>
 
