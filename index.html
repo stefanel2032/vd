@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Valentine’s Day ❤️</title>
-
+  
   <style>
     body {
       margin: 0;
@@ -13,9 +13,9 @@
       justify-content: center;
       align-items: center;
       font-family: Arial, sans-serif;
-      background:
-        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-        url("poza.jpeg") center/cover no-repeat;
+      /* Am adăugat un fallback color în caz că poza nu se încarcă */
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                  url("poza.jpeg") center/cover no-repeat #000;
       color: white;
       overflow: hidden;
       text-align: center;
@@ -26,11 +26,11 @@
       padding: 40px;
       border-radius: 20px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      max-width: 92%;
+      max-width: 90%;
+      backdrop-filter: blur(5px); /* Un efect modern de blur pe fundal */
     }
 
     h1 { margin-top: 0; font-size: 1.9em; }
-
     .buttons { margin-top: 25px; }
 
     button {
@@ -40,25 +40,26 @@
       border: none;
       border-radius: 30px;
       cursor: pointer;
-      transition: transform 0.2s, font-size 0.2s;
+      transition: all 0.2s ease;
     }
 
     #yes { background: #4CAF50; color: white; }
     #no  { background: #e63946; color: white; }
 
-    button:hover { transform: scale(1.05); }
+    button:hover { transform: scale(1.1); }
 
     #response {
       margin-top: 18px;
       font-size: 16px;
       opacity: 0.95;
       min-height: 24px;
+      font-style: italic;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
+  <div class="container" id="main-card">
     <h1>Domnișoara Dr. med. Tănase, îmi acordați mie ziua de 14? ❤️</h1>
     <p>Am vorbit cu vremea să fie romantică doar pentru noi 😊</p>
 
@@ -79,36 +80,33 @@
       const yesBtn = document.getElementById("yes");
       const response = document.getElementById("response");
 
-      const size = parseFloat(getComputedStyle(yesBtn).fontSize);
-      yesBtn.style.fontSize = (size + 8) + "px";
+      // Mărim butonul de DA
+      const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+      yesBtn.style.fontSize = (currentSize + 10) + "px";
+      yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).padding) + 2) + "px";
 
-      response.textContent = "Hmm… sigur? 😏 (Da devine din ce în ce mai greu de ignorat)";
+      const mesaje = [
+        "Hmm… sigur? 😏",
+        "Mai gândește-te puțin... 🌹",
+        "Da-ul devine greu de ignorat!",
+        "Chiar vrei să apeși pe ăsta roșu? 🥺"
+      ];
+      // Alege un mesaj random din listă
+      response.textContent = mesaje[Math.floor(Math.random() * mesaje.length)];
     }
 
     function yesClicked() {
-      // Schimbăm doar conținutul BODY ca să vezi instant că funcționează
-      document.body.innerHTML = `
-        <div style="
-          background: rgba(0,0,0,0.45);
-          padding: 40px;
-          border-radius: 20px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-          max-width: 92%;
-          text-align:center;
-          color:white;
-          font-family: Arial, sans-serif;
-        ">
+      // Schimbăm conținutul
+      document.getElementById("main-card").innerHTML = `
           <h1>Știam eu ❤️</h1>
           <p>14 februarie e doar începutul 😌</p>
-          <p style="opacity:0.9;">(Așteaptă un pic, se va întampla ceva.)</p>
-        </div>
+          <p style="opacity:0.9;">Pregătește-te pentru o zi specială!</p>
       `;
+
+      // Redirecționare către melodie după 2 secunde
       setTimeout(() => {
-      // Dacă vrei totuși muzică, las asta activ:
-      window.open(
-        "https://www.youtube.com/watch?v=OK3HTPs1ccI", "_blank"
-      );
-    },2500;
+        window.location.href = "https://www.youtube.com/watch?v=OK3HTPs1ccI";
+      }, 2000);
     }
   </script>
 </body>
