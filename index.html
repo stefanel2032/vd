@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dragobete 💘</title>
+
   <style>
     :root{
       --bg1:#0b1020;
@@ -13,19 +14,21 @@
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.72);
     }
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
       min-height:100vh;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
-      background: radial-gradient(1200px 800px at 20% 10%, #2b2a74 0%, transparent 55%),
-                  radial-gradient(900px 700px at 90% 30%, #7a1f5c 0%, transparent 55%),
-                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      background:
+        radial-gradient(1200px 800px at 20% 10%, #2b2a74 0%, transparent 55%),
+        radial-gradient(900px 700px at 90% 30%, #7a1f5c 0%, transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
       overflow:hidden;
     }
 
-    /* confetti canvas behind everything */
+    /* Confetti canvas */
     canvas#confetti{
       position:fixed;
       inset:0;
@@ -109,7 +112,6 @@
     .screen{ display:none; }
     .screen.active{ display:block; }
 
-    /* little heart glow */
     .badge{
       display:inline-flex;
       gap:8px;
@@ -130,56 +132,76 @@
       from{ opacity:0; transform: translateY(8px); }
       to{ opacity:1; transform: translateY(0); }
     }
+
+    /* Imaginea cu Nero ca "buton" */
+    #neroClickable{
+      cursor:pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    #neroClickable:hover{
+      transform: scale(1.02);
+      box-shadow: 0 20px 40px rgba(255, 182, 193, 0.22);
+    }
+    #neroClickable:active{
+      transform: scale(0.985);
+    }
   </style>
 </head>
+
 <body>
   <canvas id="confetti"></canvas>
 
   <div class="wrap">
     <div class="card">
+
       <!-- SCREEN 1 -->
       <section id="s1" class="screen active fade-in" aria-label="Ecran 1">
-        <div class="img">
-          <!-- Înlocuiește cu poza ta cu broasca țestoasă (ideal link direct la jpg/png) -->
-          <img
-            alt="Broască țestoasă"
-            src="b2dd3e60%2Df58d%2D4b02%2D8bdd.webp"
-          />
+        <!-- IMPORTANT:
+             Pune poza ta cu Nero aici.
+             Dacă ai: index.html + images/nero.webp, atunci rămâne exact așa. -->
+        <div class="img" id="neroClickable" role="button" aria-label="Apasă pe Nero">
+          <img src="b2dd3e60-f58d-4b02-8bdd-00ffb3d9f905.jpeg" alt="Nero">
         </div>
 
         <div class="badge">💌 Dragobete</div>
-        <h1 class="title">Apasă pe <span style="text-decoration:underline;">Nero</span> ca să vezi ce a pregătit Dragobete pentru tine.</h1>
-        <p class="subtitle">Promit că merită. 😊</p>
-
-        <button class="btn" id="neroBtn">Nero 🐢</button>
+        <h1 class="title">Apasă pe Nero ca să vezi ce a pregătit Dragobete pentru tine.</h1>
+        <p class="subtitle">🐢</p>
       </section>
 
       <!-- SCREEN 2 -->
       <section id="s2" class="screen" aria-label="Ecran 2">
+        <!-- Pune poza ta cu buchetul aici -->
         <div class="img">
-          <!-- Înlocuiește cu poza buchetului tău (ideal link direct la jpg/png) -->
-          <img
-            alt="Buchet de flori"
-            src="Gemini_Generated_Image_p12yc4p12yc4p12y.png"
-          />
+          <img src="Gemini_Generated_Image_p12yc4p12yc4p12y.jpeg" alt="Buchet de flori">
         </div>
 
         <div class="badge">🎉 Surpriză</div>
         <h1 class="title">Dragobete fericit, Teodora! 💐</h1>
-        <p class="subtitle">Ești cea mai specială persoană din viața mea. ❤️</p>
+        <p class="subtitle">Ești cea mai specială persoană pentru mine ❤️</p>
 
         <button class="btn" id="againBtn">Mai o dată confetti ✨</button>
       </section>
+
     </div>
   </div>
 
   <script>
+    // --------- Screens ----------
     const s1 = document.getElementById("s1");
     const s2 = document.getElementById("s2");
-    const neroBtn = document.getElementById("neroBtn");
+    const neroClickable = document.getElementById("neroClickable");
     const againBtn = document.getElementById("againBtn");
 
-    // --- Simple confetti (no libraries) ---
+    function goToSecondScreen(){
+      s1.classList.remove("active");
+      s2.classList.add("active", "fade-in");
+      startConfetti();
+      setTimeout(() => s2.classList.remove("fade-in"), 600);
+    }
+
+    neroClickable.addEventListener("click", goToSecondScreen);
+
+    // --------- Confetti (Canvas + JS, no libs) ----------
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
     let W, H, rafId = null;
@@ -200,7 +222,7 @@
 
     function rand(min, max){ return Math.random() * (max - min) + min; }
 
-    function makePieces(count = 180){
+    function makePieces(count = 220){
       pieces = Array.from({length: count}, () => ({
         x: rand(0, W),
         y: rand(-H, 0),
@@ -217,6 +239,7 @@
 
     function draw(){
       ctx.clearRect(0,0,W,H);
+
       for(const p of pieces){
         p.x += p.vx;
         p.y += p.vy;
@@ -232,7 +255,7 @@
         ctx.rotate(p.rot);
         ctx.globalAlpha = p.alpha;
 
-        // random pastel each frame? (no) -> stable pseudo-random by x+y
+        // stable-ish pastel color based on position
         const seed = (Math.floor(p.x + p.y) % 360 + 360) % 360;
         ctx.fillStyle = hsla(${seed}, 90%, 70%, 1);
 
@@ -245,6 +268,7 @@
         }
         ctx.restore();
       }
+
       rafId = requestAnimationFrame(draw);
     }
 
@@ -268,15 +292,6 @@
       ctx.clearRect(0,0,W,H);
     }
 
-    function goToSecondScreen(){
-      s1.classList.remove("active");
-      s2.classList.add("active", "fade-in");
-      startConfetti();
-      // curăță fade-in după animație
-      setTimeout(()=> s2.classList.remove("fade-in"), 600);
-    }
-
-    neroBtn.addEventListener("click", goToSecondScreen);
     againBtn.addEventListener("click", () => {
       stopConfetti();
       startConfetti();
