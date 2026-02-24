@@ -1,301 +1,67 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dragobete 💘</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dragobete 💘</title>
 
-  <style>
-    :root{
-      --bg1:#0b1020;
-      --bg2:#150b1f;
-      --card: rgba(255,255,255,.08);
-      --border: rgba(255,255,255,.16);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.72);
-    }
-    *{ box-sizing:border-box; }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #2b2a74, #7a1f5c);
+    color: white;
+    text-align: center;
+}
 
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 800px at 20% 10%, #2b2a74 0%, transparent 55%),
-        radial-gradient(900px 700px at 90% 30%, #7a1f5c 0%, transparent 55%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
-      overflow:hidden;
-    }
+.container {
+    padding: 30px;
+}
 
-    /* Confetti canvas */
-    canvas#confetti{
-      position:fixed;
-      inset:0;
-      width:100vw;
-      height:100vh;
-      z-index:0;
-      pointer-events:none;
-      opacity:0;
-      transition: opacity .35s ease;
-    }
-    body.confetti-on canvas#confetti{ opacity:1; }
+img {
+    width: 90%;
+    max-width: 500px;
+    border-radius: 20px;
+    cursor: pointer;
+}
 
-    .wrap{
-      position:relative;
-      z-index:1;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      padding:24px;
-    }
+h1 {
+    margin-top: 20px;
+}
 
-    .card{
-      width:min(560px, 100%);
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 18px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
-    }
-
-    .img{
-      width:100%;
-      aspect-ratio: 4 / 3;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.12);
-      overflow:hidden;
-      background: rgba(255,255,255,.06);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .img img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      transform: scale(1.01);
-    }
-
-    .title{
-      margin:14px 4px 6px;
-      font-size: 22px;
-      line-height:1.25;
-      letter-spacing:.2px;
-    }
-    .subtitle{
-      margin:0 4px 14px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height:1.4;
-    }
-
-    .btn{
-      width:100%;
-      border:0;
-      border-radius: 18px;
-      padding: 14px 16px;
-      font-size: 16px;
-      font-weight: 650;
-      cursor:pointer;
-      color: #0b1020;
-      background: linear-gradient(135deg, #ffd1e7, #fff2c2);
-      box-shadow: 0 12px 28px rgba(0,0,0,.25);
-      transition: transform .08s ease, filter .2s ease;
-      user-select:none;
-    }
-    .btn:active{ transform: translateY(1px) scale(.99); }
-    .btn:hover{ filter: brightness(1.03); }
-
-    .screen{ display:none; }
-    .screen.active{ display:block; }
-
-    .badge{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      margin: 6px 4px 0;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      font-size: 13px;
-      color: rgba(255,255,255,.85);
-    }
-
-    .fade-in{
-      animation: fade .45s ease both;
-    }
-    @keyframes fade{
-      from{ opacity:0; transform: translateY(8px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
-    /* Imaginea cu Nero ca "buton" */
-    #neroClickable{
-      cursor:pointer;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    #neroClickable:hover{
-      transform: scale(1.02);
-      box-shadow: 0 20px 40px rgba(255, 182, 193, 0.22);
-    }
-    #neroClickable:active{
-      transform: scale(0.985);
-    }
-  </style>
+.hidden {
+    display: none;
+}
+</style>
 </head>
 
 <body>
-  <canvas id="confetti"></canvas>
 
-  <div class="wrap">
-    <div class="card">
+<div class="container">
 
-      <!-- SCREEN 1 -->
-      <section id="s1" class="screen active fade-in" aria-label="Ecran 1">
-        <!-- IMPORTANT:
-             Pune poza ta cu Nero aici.
-             Dacă ai: index.html + images/nero.webp, atunci rămâne exact așa. -->
-        <div class="img" id="neroClickable" role="button" aria-label="Apasă pe Nero">
-          <img src="b2dd3e60-f58d-4b02-8bdd-00ffb3d9f905.jpeg" alt="Nero">
-        </div>
-
-        <div class="badge">💌 Dragobete</div>
-        <h1 class="title">Apasă pe Nero ca să vezi ce a pregătit Dragobete pentru tine.</h1>
-        <p class="subtitle">🐢</p>
-      </section>
-
-      <!-- SCREEN 2 -->
-      <section id="s2" class="screen" aria-label="Ecran 2">
-        <!-- Pune poza ta cu buchetul aici -->
-        <div class="img">
-          <img src="Gemini_Generated_Image_p12yc4p12yc4p12y.jpeg" alt="Buchet de flori">
-        </div>
-
-        <div class="badge">🎉 Surpriză</div>
-        <h1 class="title">Dragobete fericit, Teodora! 💐</h1>
-        <p class="subtitle">Ești cea mai specială persoană pentru mine ❤️</p>
-
-        <button class="btn" id="againBtn">Mai o dată confetti ✨</button>
-      </section>
-
+    <!-- ECRAN 1 -->
+    <div id="screen1">
+        <!-- Pune poza ta cu Nero aici -->
+        <img src="b2dd3e60-f58d-4b02-8bdd-00ffb3d9f905.jpeg" alt="Nero">
+        <h1>Apasă pe Nero pentru a vedea ce a pregătit Dragobete pentru tine ❤️</h1>
     </div>
-  </div>
 
-  <script>
-    // --------- Screens ----------
-    const s1 = document.getElementById("s1");
-    const s2 = document.getElementById("s2");
-    const neroClickable = document.getElementById("neroClickable");
-    const againBtn = document.getElementById("againBtn");
+    <!-- ECRAN 2 -->
+    <div id="screen2" class="hidden">
+        <!-- Pune poza cu florile aici -->
+        <img src="Gemini_Generated_Image_p12yc4p12yc4p12y.jpeg" alt="Buchet de flori">
+        <h1>Dragobete fericit, Teodora! 💐</h1>
+        <h2>Ești cea mai specială persoană din viața mea. ❤️</h2>
+    </div>
 
-    function goToSecondScreen(){
-      s1.classList.remove("active");
-      s2.classList.add("active", "fade-in");
-      startConfetti();
-      setTimeout(() => s2.classList.remove("fade-in"), 600);
-    }
+</div>
 
-    neroClickable.addEventListener("click", goToSecondScreen);
+<script>
+document.getElementById("neroImage").onclick = function() {
+    document.getElementById("screen1").style.display = "none";
+    document.getElementById("screen2").style.display = "block";
+};
+</script>
 
-    // --------- Confetti (Canvas + JS, no libs) ----------
-    const canvas = document.getElementById("confetti");
-    const ctx = canvas.getContext("2d");
-    let W, H, rafId = null;
-    let pieces = [];
-    let running = false;
-    const DURATION_MS = 3500;
-
-    function resize() {
-      const dpr = Math.max(1, window.devicePixelRatio || 1);
-      W = canvas.width  = Math.floor(window.innerWidth  * dpr);
-      H = canvas.height = Math.floor(window.innerHeight * dpr);
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-      ctx.setTransform(1,0,0,1,0,0);
-    }
-    window.addEventListener("resize", resize);
-    resize();
-
-    function rand(min, max){ return Math.random() * (max - min) + min; }
-
-    function makePieces(count = 220){
-      pieces = Array.from({length: count}, () => ({
-        x: rand(0, W),
-        y: rand(-H, 0),
-        w: rand(6, 14),
-        h: rand(8, 18),
-        vx: rand(-1.8, 1.8),
-        vy: rand(2.2, 5.2),
-        rot: rand(0, Math.PI * 2),
-        vr: rand(-0.12, 0.12),
-        shape: Math.random() < 0.25 ? "circle" : "rect",
-        alpha: rand(0.75, 1)
-      }));
-    }
-
-    function draw(){
-      ctx.clearRect(0,0,W,H);
-
-      for(const p of pieces){
-        p.x += p.vx;
-        p.y += p.vy;
-        p.rot += p.vr;
-
-        // wrap
-        if (p.y > H + 40) { p.y = rand(-120, -40); p.x = rand(0, W); }
-        if (p.x < -40) p.x = W + 40;
-        if (p.x > W + 40) p.x = -40;
-
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        ctx.globalAlpha = p.alpha;
-
-        // stable-ish pastel color based on position
-        const seed = (Math.floor(p.x + p.y) % 360 + 360) % 360;
-        ctx.fillStyle = hsla(${seed}, 90%, 70%, 1);
-
-        if (p.shape === "circle"){
-          ctx.beginPath();
-          ctx.arc(0,0, p.w/2, 0, Math.PI*2);
-          ctx.fill();
-        } else {
-          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-        }
-        ctx.restore();
-      }
-
-      rafId = requestAnimationFrame(draw);
-    }
-
-    function startConfetti(){
-      if (running) return;
-      running = true;
-      document.body.classList.add("confetti-on");
-      makePieces(220);
-      draw();
-
-      setTimeout(() => {
-        stopConfetti();
-      }, DURATION_MS);
-    }
-
-    function stopConfetti(){
-      running = false;
-      document.body.classList.remove("confetti-on");
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = null;
-      ctx.clearRect(0,0,W,H);
-    }
-
-    againBtn.addEventListener("click", () => {
-      stopConfetti();
-      startConfetti();
-    });
-  </script>
 </body>
 </html>
