@@ -3,24 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dragobete 💘</title>
+<title>Dragobete</title>
 
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #2b2a74, #7a1f5c);
-    color: white;
     text-align: center;
-}
-
-.container {
-    padding: 30px;
+    background: #7a1f5c;
+    color: white;
+    font-family: Arial, sans-serif;
 }
 
 img {
     width: 90%;
     max-width: 500px;
+    margin-top: 40px;
     border-radius: 20px;
     cursor: pointer;
 }
@@ -29,38 +26,34 @@ h1 {
     margin-top: 20px;
 }
 
-.hidden {
-    display: none;
+h2 {
+    font-weight: normal;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<img id="mainImage" src="b2dd3e60-f58d-4b02-8bdd-00ffb3d9f905.jpeg" alt="Nero">
 
-    <!-- ECRAN 1 -->
-    <div id="screen1">
-        <!-- Pune poza ta cu Nero aici -->
-        <img src="b2dd3e60-f58d-4b02-8bdd-00ffb3d9f905.jpeg" alt="Nero">
-        <h1>Apasă pe Nero pentru a vedea ce a pregătit Dragobete pentru tine ❤️</h1>
-    </div>
+<h1 id="titleText">
+Apasă pe Nero pentru a vedea ce a pregătit Dragobete pentru tine ❤️
+</h1>
 
-    <!-- ECRAN 2 -->
-    <div id="screen2" class="hidden">
-        <!-- Pune poza cu florile aici -->
-        <img src="Gemini_Generated_Image_p12yc4p12yc4p12y.jpeg" alt="Buchet de flori">
-        <h1>Dragobete fericit, Teodora! 💐</h1>
-        <h2>Ești cea mai specială persoană din viața mea. ❤️</h2>
-    </div>
-
-</div>
+<h2 id="subtitleText">
+🐢
+</h2>
 
 <script>
-document.getElementById("neroImage").onclick = function() {
-    document.getElementById("screen1").style.display = "none";
-    document.getElementById("screen2").style.display = "block";
-};
+const image = document.getElementById("mainImage");
+const title = document.getElementById("titleText");
+const subtitle = document.getElementById("subtitleText");
+
+image.addEventListener("click", function() {
+    image.src = "Gemini_Generated_Image_p12yc4p12yc4p12y.jpeg";
+    title.innerText = "Dragobete fericit, Teodora! 💐";
+    subtitle.innerText = "Ești cea mai specială persoană din viața mea ❤️";
+});
 </script>
 
 </body>
