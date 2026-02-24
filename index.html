@@ -1,113 +1,286 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Valentine’s Day ❤️</title>
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dragobete 💘</title>
   <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-      /* Am adăugat un fallback color în caz că poza nu se încarcă */
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                  url("poza.jpeg") center/cover no-repeat #000;
-      color: white;
-      overflow: hidden;
-      text-align: center;
+    :root{
+      --bg1:#0b1020;
+      --bg2:#150b1f;
+      --card: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.16);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 20% 10%, #2b2a74 0%, transparent 55%),
+                  radial-gradient(900px 700px at 90% 30%, #7a1f5c 0%, transparent 55%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow:hidden;
     }
 
-    .container {
-      background: rgba(0,0,0,0.45);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      max-width: 90%;
-      backdrop-filter: blur(5px); /* Un efect modern de blur pe fundal */
+    /* confetti canvas behind everything */
+    canvas#confetti{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      z-index:0;
+      pointer-events:none;
+      opacity:0;
+      transition: opacity .35s ease;
+    }
+    body.confetti-on canvas#confetti{ opacity:1; }
+
+    .wrap{
+      position:relative;
+      z-index:1;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
     }
 
-    h1 { margin-top: 0; font-size: 1.9em; }
-    .buttons { margin-top: 25px; }
-
-    button {
-      font-size: 20px;
-      padding: 12px 28px;
-      margin: 10px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.2s ease;
+    .card{
+      width:min(560px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
     }
 
-    #yes { background: #4CAF50; color: white; }
-    #no  { background: #e63946; color: white; }
+    .img{
+      width:100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+      background: rgba(255,255,255,.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .img img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transform: scale(1.01);
+    }
 
-    button:hover { transform: scale(1.1); }
+    .title{
+      margin:14px 4px 6px;
+      font-size: 22px;
+      line-height:1.25;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin:0 4px 14px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height:1.4;
+    }
 
-    #response {
-      margin-top: 18px;
+    .btn{
+      width:100%;
+      border:0;
+      border-radius: 18px;
+      padding: 14px 16px;
       font-size: 16px;
-      opacity: 0.95;
-      min-height: 24px;
-      font-style: italic;
+      font-weight: 650;
+      cursor:pointer;
+      color: #0b1020;
+      background: linear-gradient(135deg, #ffd1e7, #fff2c2);
+      box-shadow: 0 12px 28px rgba(0,0,0,.25);
+      transition: transform .08s ease, filter .2s ease;
+      user-select:none;
+    }
+    .btn:active{ transform: translateY(1px) scale(.99); }
+    .btn:hover{ filter: brightness(1.03); }
+
+    .screen{ display:none; }
+    .screen.active{ display:block; }
+
+    /* little heart glow */
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      margin: 6px 4px 0;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size: 13px;
+      color: rgba(255,255,255,.85);
+    }
+
+    .fade-in{
+      animation: fade .45s ease both;
+    }
+    @keyframes fade{
+      from{ opacity:0; transform: translateY(8px); }
+      to{ opacity:1; transform: translateY(0); }
     }
   </style>
 </head>
-
 <body>
-  <div class="container" id="main-card">
-    <h1>Domnișoara Dr. med. Tănase, îmi acordați mie ziua de 14? ❤️</h1>
-    <p>Am vorbit cu vremea să fie romantică doar pentru noi 😊</p>
+  <canvas id="confetti"></canvas>
 
-    <div class="buttons">
-      <button id="yes" onclick="yesClicked()">Da 💖</button>
-      <button id="no" onclick="noClicked()">Nu 🙈</button>
+  <div class="wrap">
+    <div class="card">
+      <!-- SCREEN 1 -->
+      <section id="s1" class="screen active fade-in" aria-label="Ecran 1">
+        <div class="img">
+          <!-- Înlocuiește cu poza ta cu broasca țestoasă (ideal link direct la jpg/png) -->
+          <img
+            alt="Broască țestoasă"
+            src="https://images.unsplash.com/photo-1504472478235-9bc48ba4d60f?auto=format&fit=crop&w=1200&q=80"
+          />
+        </div>
+
+        <div class="badge">💌 Dragobete</div>
+        <h1 class="title">Apasă pe <span style="text-decoration:underline;">Nero</span> ca să vezi ce a pregătit Dragobete pentru ea.</h1>
+        <p class="subtitle">Promit că merită. 😊</p>
+
+        <button class="btn" id="neroBtn">Nero 🐢</button>
+      </section>
+
+      <!-- SCREEN 2 -->
+      <section id="s2" class="screen" aria-label="Ecran 2">
+        <div class="img">
+          <!-- Înlocuiește cu poza buchetului tău (ideal link direct la jpg/png) -->
+          <img
+            alt="Buchet de flori"
+            src="https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1200&q=80"
+          />
+        </div>
+
+        <div class="badge">🎉 Surpriză</div>
+        <h1 class="title">Dragobete fericit, Teodora! 💐</h1>
+        <p class="subtitle">Te iubesc mult. ❤️</p>
+
+        <button class="btn" id="againBtn">Mai o dată confetti ✨</button>
+      </section>
     </div>
-
-    <div id="response"></div>
-
-    <p style="margin-top:15px;font-size:14px;opacity:0.85;">
-      PS: imaginea e cu AI, dar intențiile mele sunt reale 😌
-    </p>
   </div>
 
   <script>
-    function noClicked() {
-      const yesBtn = document.getElementById("yes");
-      const response = document.getElementById("response");
+    const s1 = document.getElementById("s1");
+    const s2 = document.getElementById("s2");
+    const neroBtn = document.getElementById("neroBtn");
+    const againBtn = document.getElementById("againBtn");
 
-      // Mărim butonul de DA
-      const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-      yesBtn.style.fontSize = (currentSize + 10) + "px";
-      yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).padding) + 2) + "px";
+    // --- Simple confetti (no libraries) ---
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let W, H, rafId = null;
+    let pieces = [];
+    let running = false;
+    const DURATION_MS = 3500;
 
-      const mesaje = [
-        "Hmm… sigur? 😏",
-        "Mai gândește-te puțin... 🌹",
-        "Da-ul devine greu de ignorat!",
-        "Chiar vrei să apeși pe ăsta roșu? 🥺"
-      ];
-      // Alege un mesaj random din listă
-      response.textContent = mesaje[Math.floor(Math.random() * mesaje.length)];
+    function resize() {
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      W = canvas.width  = Math.floor(window.innerWidth  * dpr);
+      H = canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(1,0,0,1,0,0);
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+
+    function makePieces(count = 180){
+      pieces = Array.from({length: count}, () => ({
+        x: rand(0, W),
+        y: rand(-H, 0),
+        w: rand(6, 14),
+        h: rand(8, 18),
+        vx: rand(-1.8, 1.8),
+        vy: rand(2.2, 5.2),
+        rot: rand(0, Math.PI * 2),
+        vr: rand(-0.12, 0.12),
+        shape: Math.random() < 0.25 ? "circle" : "rect",
+        alpha: rand(0.75, 1)
+      }));
     }
 
-    function yesClicked() {
-      // Schimbăm conținutul
-      document.getElementById("main-card").innerHTML = `
-          <h1>Știam eu ❤️</h1>
-          <p>14 februarie e doar începutul 😌</p>
-          <p style="opacity:0.9;">Pregătește-te pentru o zi specială!</p>
-      `;
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      for(const p of pieces){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
 
-      // Redirecționare către melodie după 2 secunde
+        // wrap
+        if (p.y > H + 40) { p.y = rand(-120, -40); p.x = rand(0, W); }
+        if (p.x < -40) p.x = W + 40;
+        if (p.x > W + 40) p.x = -40;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = p.alpha;
+
+        // random pastel each frame? (no) -> stable pseudo-random by x+y
+        const seed = (Math.floor(p.x + p.y) % 360 + 360) % 360;
+        ctx.fillStyle = hsla(${seed}, 90%, 70%, 1);
+
+        if (p.shape === "circle"){
+          ctx.beginPath();
+          ctx.arc(0,0, p.w/2, 0, Math.PI*2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        }
+        ctx.restore();
+      }
+      rafId = requestAnimationFrame(draw);
+    }
+
+    function startConfetti(){
+      if (running) return;
+      running = true;
+      document.body.classList.add("confetti-on");
+      makePieces(220);
+      draw();
+
       setTimeout(() => {
-        window.location.href = "https://www.youtube.com/watch?v=OK3HTPs1ccI";
-      }, 2000);
+        stopConfetti();
+      }, DURATION_MS);
     }
+
+    function stopConfetti(){
+      running = false;
+      document.body.classList.remove("confetti-on");
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      ctx.clearRect(0,0,W,H);
+    }
+
+    function goToSecondScreen(){
+      s1.classList.remove("active");
+      s2.classList.add("active", "fade-in");
+      startConfetti();
+      // curăță fade-in după animație
+      setTimeout(()=> s2.classList.remove("fade-in"), 600);
+    }
+
+    neroBtn.addEventListener("click", goToSecondScreen);
+    againBtn.addEventListener("click", () => {
+      stopConfetti();
+      startConfetti();
+    });
   </script>
 </body>
 </html>
